@@ -1,0 +1,69 @@
+{%- if cart.item_count > 0 -%}
+  <div class="sa-cart-page">
+    <h1 class="sa-cart-page__title">Your Cart</h1>
+
+    <div>
+      {%- form 'cart', cart, id: 'CartForm' -%}
+        <div class="sa-cart-table">
+          {%- for item in cart.items -%}
+            <div class="sa-cart-row">
+              <a href="{{ item.url }}" class="sa-cart-row__img">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" width="80" height="80" loading="lazy">
+                {%- endif -%}
+              </a>
+              <div>
+                <p class="sa-cart-row__name"><a href="{{ item.url }}">{{ item.product.title }}</a></p>
+                {%- if item.variant.title != 'Default Title' -%}
+                  <p class="sa-cart-row__variant">{{ item.variant.title }}</p>
+                {%- endif -%}
+                <div class="sa-qty" style="margin-top:10px">
+                  <button type="button" class="sa-qty__btn" onclick="SixthAve.updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})">−</button>
+                  <span class="sa-qty__val">{{ item.quantity }}</span>
+                  <button type="button" class="sa-qty__btn" onclick="SixthAve.updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+                  <button type="button" onclick="SixthAve.updateQty('{{ item.key }}', 0)" style="font-size:11px; color: var(--sa-muted); margin-left:12px; text-decoration:underline; text-underline-offset:2px">Remove</button>
+                </div>
+              </div>
+              <div class="sa-cart-row__price">{{ item.final_line_price | money }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endform -%}
+    </div>
+
+    <div class="sa-cart-summary">
+      <p class="sa-cart-summary__title">Order Summary</p>
+      <div class="sa-cart-summary__row">
+        <span>Subtotal</span>
+        <span>{{ cart.total_price | money }}</span>
+      </div>
+      <div class="sa-cart-summary__row">
+        <span>Shipping</span>
+        <span style="color: var(--sa-gold)">Calculated at checkout</span>
+      </div>
+      <div class="sa-cart-summary__total">
+        <span>Total</span>
+        <span>{{ cart.total_price | money }}</span>
+      </div>
+      <p class="sa-cart-summary__note">Taxes included where applicable</p>
+      <a href="/checkout" class="sa-btn sa-btn--primary sa-btn--full" style="margin-bottom:8px">Checkout</a>
+      <a href="/collections/all" class="sa-btn sa-btn--ghost sa-btn--full">Continue Shopping</a>
+    </div>
+  </div>
+
+{%- else -%}
+  <div class="sa-404">
+    <h1 class="sa-404__title">Your cart is empty</h1>
+    <p class="sa-404__sub">Looks like you haven't added anything yet.</p>
+    <a href="/collections/all" class="sa-btn sa-btn--primary">Shop All</a>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart page",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Cart page" }]
+}
+{% endschema %}

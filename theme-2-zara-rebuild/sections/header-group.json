@@ -1,0 +1,41 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "show_announcement": true
+      },
+      "blocks": {
+        "ann-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "✦  FREE SHIPPING ON ORDERS $150+  ✦",
+            "link": ""
+          }
+        },
+        "ann-2": {
+          "type": "announcement",
+          "settings": {
+            "text": "100% AUTHENTICATED BY EXPERTS",
+            "link": ""
+          }
+        },
+        "ann-3": {
+          "type": "announcement",
+          "settings": {
+            "text": "NEW DROPS WEEKLY — SHOP NOW",
+            "link": "/collections/new-arrivals"
+          }
+        }
+      },
+      "block_order": ["ann-1", "ann-2", "ann-3"]
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

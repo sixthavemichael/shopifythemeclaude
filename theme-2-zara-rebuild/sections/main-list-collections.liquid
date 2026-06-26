@@ -1,0 +1,29 @@
+<div style="max-width: 1380px; margin: 0 auto; padding: 60px 24px">
+  <h1 style="font-size:clamp(20px,3vw,30px); font-weight:300; letter-spacing:.12em; text-transform:uppercase; margin-bottom:40px">Collections</h1>
+  <div class="sa-grid sa-grid--3">
+    {%- for collection in collections -%}
+      <a href="{{ collection.url }}" class="sa-card" style="text-decoration:none">
+        <div class="sa-card__media">
+          {%- if collection.featured_image -%}
+            <img src="{{ collection.featured_image | image_url: width: 600 }}" alt="{{ collection.title | escape }}" loading="lazy">
+          {%- else -%}
+            <div style="background: var(--sa-card); width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: var(--sa-muted); font-size:11px; letter-spacing:.1em; text-transform:uppercase">{{ collection.title }}</div>
+          {%- endif -%}
+        </div>
+        <div class="sa-card__body">
+          <p class="sa-card__title">{{ collection.title }}</p>
+          <p class="sa-card__subtitle">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Collections list" }]
+}
+{% endschema %}

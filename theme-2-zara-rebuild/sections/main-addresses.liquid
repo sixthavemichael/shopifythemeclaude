@@ -1,0 +1,58 @@
+<div style="max-width:700px; margin:0 auto; padding:60px 24px">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:40px">
+    <h1 style="font-size:22px; font-weight:300; letter-spacing:.14em; text-transform:uppercase">Addresses</h1>
+    <a href="/account" style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color: var(--sa-muted); text-decoration:underline; text-underline-offset:2px">Back to Account</a>
+  </div>
+
+  <h2 style="font-size:12px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color: var(--sa-text); margin-bottom:24px">Add New Address</h2>
+  {%- form 'customer_address', customer.new_address -%}
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px">
+      <input class="sa-form-input" type="text" name="address[first_name]" placeholder="First name" value="{{ form.first_name }}" style="width:100%">
+      <input class="sa-form-input" type="text" name="address[last_name]" placeholder="Last name" value="{{ form.last_name }}" style="width:100%">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px">
+      <input class="sa-form-input" type="text" name="address[address1]" placeholder="Address" value="{{ form.address1 }}" style="width:100%">
+      <input class="sa-form-input" type="text" name="address[address2]" placeholder="Apartment, suite, etc." value="{{ form.address2 }}" style="width:100%">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <input class="sa-form-input" type="text" name="address[city]" placeholder="City" value="{{ form.city }}" style="width:100%">
+        <input class="sa-form-input" type="text" name="address[zip]" placeholder="ZIP code" value="{{ form.zip }}" style="width:100%">
+      </div>
+      <input class="sa-form-input" type="text" name="address[province]" placeholder="State" value="{{ form.province }}" style="width:100%">
+      <input class="sa-form-input" type="text" name="address[country]" placeholder="Country" value="{{ form.country }}" style="width:100%">
+      <input class="sa-form-input" type="tel" name="address[phone]" placeholder="Phone" value="{{ form.phone }}" style="width:100%">
+    </div>
+    <label style="font-size:11px; color: var(--sa-muted); display:flex; align-items:center; gap:8px; margin-bottom:20px; cursor:pointer">
+      <input type="checkbox" name="address[default]" value="1" style="accent-color: var(--sa-gold)"> Set as default address
+    </label>
+    <button type="submit" class="sa-btn sa-btn--primary">Save Address</button>
+  {%- endform -%}
+
+  {%- if customer.addresses.size > 0 -%}
+    <h2 style="font-size:12px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color: var(--sa-text); margin-top:56px; margin-bottom:24px">Saved Addresses</h2>
+    {%- for address in customer.addresses -%}
+      <div style="border:.5px solid var(--sa-border); padding:20px; margin-bottom:12px">
+        {%- if address == customer.default_address -%}
+          <span style="font-size:9px; letter-spacing:.12em; text-transform:uppercase; color: var(--sa-gold); display:block; margin-bottom:8px">Default</span>
+        {%- endif -%}
+        <p style="font-size:13px; color: var(--sa-text); line-height:1.8">
+          {{ address.first_name }} {{ address.last_name }}<br>
+          {{ address.address1 }}{%- if address.address2 != blank -%}, {{ address.address2 }}{%- endif -%}<br>
+          {{ address.city }}, {{ address.province_code }} {{ address.zip }}<br>
+          {{ address.country }}
+        </p>
+        <div style="margin-top:12px; display:flex; gap:16px">
+          <a href="#" style="font-size:11px; letter-spacing:.08em; text-transform:uppercase; color: var(--sa-muted); text-decoration:underline; text-underline-offset:2px" onclick="Shopify.CustomerAddress.toggleForm('{{ address.id }}'); return false;">Edit</a>
+          <a href="#" style="font-size:11px; letter-spacing:.08em; text-transform:uppercase; color: var(--sa-muted); text-decoration:underline; text-underline-offset:2px" onclick="Shopify.CustomerAddress.destroy('{{ address.id }}', '{{ 'addresses.delete_confirm' | t }}'); return false;">Delete</a>
+        </div>
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Addresses page",
+  "tag": "div",
+  "settings": []
+}
+{% endschema %}

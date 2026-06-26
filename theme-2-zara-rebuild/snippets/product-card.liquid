@@ -1,0 +1,104 @@
+{%- comment -%} Usage: render 'product-card', product: product {%- endcomment -%}
+{%- assign first_variant = product.selected_or_first_available_variant -%}
+
+<div class="sa-card">
+  <a href="{{ product.url }}" class="sa-card__media">
+
+    {%- comment -%} Badges {%- endcomment -%}
+    <div class="sa-card__badges">
+      {%- if product.available == false -%}
+        <span class="sa-badge sa-badge--outline">Sold Out</span>
+      {%- elsif product.tags contains '1-of-1' or product.tags contains '1 of 1' -%}
+        <span class="sa-badge sa-badge--white">1 of 1</span>
+      {%- elsif product.tags contains 'new-drop' or product.tags contains 'new drop' -%}
+        <span class="sa-badge sa-badge--new">New</span>
+      {%- endif -%}
+      {%- if product.tags contains 'authenticated' -%}
+        <span class="sa-badge sa-badge--gold">Auth</span>
+      {%- endif -%}
+      {%- if product.tags contains 'vintage' -%}
+        <span class="sa-badge sa-badge--vintage">Vintage</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Primary image {%- endcomment -%}
+    {%- if product.featured_image -%}
+      <img
+        class="sa-card__img--primary"
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w"
+        sizes="(max-width: 480px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="600"
+        height="800"
+      >
+    {%- endif -%}
+
+    {%- comment -%} Secondary image on hover {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <img
+        class="sa-card__img--secondary"
+        src="{{ product.images[1] | image_url: width: 600 }}"
+        alt="{{ product.images[1].alt | default: product.title | escape }}"
+        loading="lazy"
+        width="600"
+        height="800"
+      >
+    {%- endif -%}
+
+    {%- comment -%} Quick add on hover {%- endcomment -%}
+    {%- if product.available -%}
+      {%- unless product.has_only_default_variant -%}
+        <div class="sa-card__quick-add" onclick="event.preventDefault()">
+          <select id="QuickAdd-{{ product.id }}" aria-label="Select size">
+            {%- for variant in product.variants -%}
+              {%- if variant.available -%}
+                <option value="{{ variant.id }}">{{ variant.title }}</option>
+              {%- endif -%}
+            {%- endfor -%}
+          </select>
+          <button
+            class="sa-btn sa-btn--primary sa-btn--full sa-btn--sm"
+            onclick="
+              event.stopPropagation();
+              var sel = document.getElementById('QuickAdd-{{ product.id }}');
+              SixthAve.quickAdd(sel.value, this)
+            "
+          >Add to Cart</button>
+        </div>
+      {%- endunless -%}
+    {%- endif -%}
+
+  </a>
+
+  <div class="sa-card__body">
+    {%- if product.vendor != blank -%}
+      <p class="sa-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+    <h3 class="sa-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if product.metafields.custom.subtitle != blank -%}
+      <p class="sa-card__subtitle">{{ product.metafields.custom.subtitle }}</p>
+    {%- endif -%}
+    <div class="sa-card__footer">
+      <div class="sa-card__price">
+        {%- if first_variant.compare_at_price > first_variant.price -%}
+          <s>{{ first_variant.compare_at_price | money }}</s>
+        {%- endif -%}
+        {{ first_variant.price | money }}
+      </div>
+      {%- if product.available -%}
+        {%- if product.has_only_default_variant -%}
+          <button
+            class="sa-card__atc"
+            onclick="event.preventDefault(); SixthAve.quickAdd('{{ first_variant.id }}', this)"
+          >Add</button>
+        {%- else -%}
+          <a href="{{ product.url }}" class="sa-card__atc">Select</a>
+        {%- endif -%}
+      {%- else -%}
+        <button class="sa-card__atc sa-card__atc--notify" onclick="event.preventDefault()">Notify</button>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

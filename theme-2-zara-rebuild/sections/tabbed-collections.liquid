@@ -1,0 +1,83 @@
+<section class="sa-section sa-tabbed-section">
+  <div class="sa-section__inner">
+
+    <div class="sa-section__header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="sa-section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="sa-section__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="sa-tabs" role="tablist">
+      {%- for block in section.blocks -%}
+        <button
+          class="sa-tab {% if forloop.first %}is-active{% endif %}"
+          role="tab"
+          aria-selected="{{ forloop.first }}"
+          {{ block.shopify_attributes }}
+        >{{ block.settings.tab_label | default: block.settings.collection.title }}</button>
+      {%- endfor -%}
+    </div>
+
+    <!-- Panels -->
+    {%- for block in section.blocks -%}
+      <div class="sa-tab-panel {% if forloop.first %}is-active{% endif %}" role="tabpanel">
+        {%- assign col = collections[block.settings.collection] -%}
+        {%- if col != blank -%}
+          <div class="sa-grid">
+            {%- for product in col.products limit: section.settings.products_per_tab -%}
+              {%- render 'product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+          {%- if block.settings.show_view_all -%}
+            <div style="text-align:center; margin-top: 36px">
+              <a href="{{ col.url }}" class="sa-btn sa-btn--ghost">View all {{ col.title }}</a>
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <p style="color: var(--sa-muted); font-size: 13px; padding: 24px 0;">No collection selected for this tab.</p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Tabbed collections",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "Shop" },
+    { "type": "text", "id": "title", "label": "Section title", "default": "New Arrivals" },
+    { "type": "range", "id": "products_per_tab", "min": 4, "max": 16, "step": 4, "label": "Products per tab", "default": 8 }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "tab_label", "label": "Tab label", "default": "New Arrivals" },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "checkbox", "id": "show_view_all", "label": "Show View All button", "default": true }
+      ]
+    }
+  ],
+  "default": {
+    "settings": { "eyebrow": "Shop", "title": "New Arrivals" },
+    "blocks": [
+      { "type": "tab", "settings": { "tab_label": "New Arrivals" } },
+      { "type": "tab", "settings": { "tab_label": "Sneakers" } },
+      { "type": "tab", "settings": { "tab_label": "Clothing" } },
+      { "type": "tab", "settings": { "tab_label": "Vintage" } }
+    ]
+  },
+  "presets": [{ "name": "Tabbed collections" }]
+}
+{% endschema %}

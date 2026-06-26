@@ -1,0 +1,71 @@
+<section class="sa-hero" style="min-height: {{ section.settings.height }}vh">
+
+  <!-- Background media -->
+  <div class="sa-hero__media">
+    {%- if section.settings.video_url != blank -%}
+      <video autoplay muted loop playsinline>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- elsif section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1800 }}"
+        srcset="{{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1100 }} 1100w, {{ section.settings.image | image_url: width: 1500 }} 1500w, {{ section.settings.image | image_url: width: 1800 }} 1800w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | default: shop.name }}"
+        loading="eager"
+        fetchpriority="high"
+      >
+    {%- else -%}
+      <div style="background: #1a1a1a; width: 100%; height: 100%;"></div>
+    {%- endif -%}
+  </div>
+
+  <!-- Overlay -->
+  <div class="sa-hero__overlay"></div>
+
+  <!-- Content -->
+  <div class="sa-hero__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="sa-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h1 class="sa-hero__heading">{{ section.settings.heading | newline_to_br }}</h1>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="sa-hero__sub">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    <div class="sa-hero__actions">
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '/collections/all' }}" class="sa-btn sa-btn--primary">
+          {{ section.settings.button_label }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.button2_label != blank -%}
+        <a href="{{ section.settings.button2_link | default: '/pages/about' }}" class="sa-btn sa-btn--ghost">
+          {{ section.settings.button2_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "tag": "section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "url", "id": "video_url", "label": "Background video URL (.mp4)" },
+    { "type": "range", "id": "height", "min": 50, "max": 100, "step": 5, "unit": "vh", "label": "Section height", "default": 85 },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Macon, GA · Est. 2020" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Curated.\nAuthenticated.\nSixth Ave." },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "button_label", "label": "Button 1 label", "default": "Shop New Arrivals" },
+    { "type": "url", "id": "button_link", "label": "Button 1 link" },
+    { "type": "text", "id": "button2_label", "label": "Button 2 label (optional)" },
+    { "type": "url", "id": "button2_link", "label": "Button 2 link" }
+  ],
+  "presets": [{ "name": "Hero banner" }]
+}
+{% endschema %}

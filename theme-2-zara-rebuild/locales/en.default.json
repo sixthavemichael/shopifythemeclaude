@@ -1,0 +1,33 @@
+{
+  "general": {
+    "search": { "title": "Search", "placeholder": "Search sneakers, brands, tees...", "no_results": "No results for \"{{ terms }}\"" },
+    "pagination": { "previous": "Previous", "next": "Next" }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "notify_me": "Notify Me",
+      "unavailable": "Unavailable",
+      "quantity": { "label": "Quantity" },
+      "size": { "label": "Size" },
+      "color": { "label": "Color" },
+      "added": "Added!",
+      "adding": "Adding..."
+    }
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "view_cart": "View Cart",
+    "note": "Shipping & taxes calculated at checkout",
+    "remove": "Remove"
+  },
+  "collections": {
+    "all": "All products",
+    "filters": "Filters",
+    "sort_by": { "label": "Sort by", "featured": "Featured", "price_asc": "Price: Low to High", "price_desc": "Price: High to Low", "new": "Newest" }
+  }
+}

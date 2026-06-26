@@ -1,0 +1,63 @@
+<section class="sa-section sa-section--tight">
+  <div class="sa-section__inner">
+    {%- if section.settings.title != blank -%}
+      <div style="text-align: center; margin-bottom: 36px">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="sa-section__eyebrow" style="text-align:center">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="sa-section__title">{{ section.settings.title }}</h2>
+      </div>
+    {%- endif -%}
+    <div class="sa-locations">
+      {%- for block in section.blocks -%}
+        <div class="sa-location" {{ block.shopify_attributes }}>
+          {%- if block.settings.tag != blank -%}
+            <p class="sa-location__tag">{{ block.settings.tag }}</p>
+          {%- endif -%}
+          <h3 class="sa-location__name">{{ block.settings.name }}</h3>
+          {%- if block.settings.address != blank -%}
+            <p class="sa-location__address">{{ block.settings.address | newline_to_br }}</p>
+          {%- endif -%}
+          {%- if block.settings.hours != blank -%}
+            <div class="sa-location__hours">{{ block.settings.hours | newline_to_br }}</div>
+          {%- endif -%}
+          {%- if block.settings.map_link != blank -%}
+            <a href="{{ block.settings.map_link }}" target="_blank" rel="noopener" class="sa-btn sa-btn--ghost sa-btn--sm">Get Directions</a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Locations",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Visit Us" },
+    { "type": "text", "id": "title", "label": "Section title", "default": "Our Boutiques" }
+  ],
+  "blocks": [
+    {
+      "type": "location",
+      "name": "Location",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag label", "default": "Flagship" },
+        { "type": "text", "id": "name", "label": "Location name", "default": "Downtown Macon" },
+        { "type": "textarea", "id": "address", "label": "Address", "default": "482 1st Street\nMacon, GA 31201" },
+        { "type": "textarea", "id": "hours", "label": "Store hours", "default": "Mon–Thu: 12pm – 7pm\nFri–Sat: 11am – 8pm" },
+        { "type": "url", "id": "map_link", "label": "Google Maps link" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "location", "settings": { "tag": "Flagship", "name": "Downtown Macon", "address": "482 1st Street\nMacon, GA 31201", "hours": "Mon–Thu: 12pm – 7pm\nFri–Sat: 11am – 8pm" } },
+      { "type": "location", "settings": { "tag": "Mall Location", "name": "Shoppes at River Crossing", "address": "5080 Riverside Dr Suite 408\nMacon, GA", "hours": "Mon–Thu: 11am – 7pm\nFri–Sat: 10am – 8pm\nSun: 12pm – 6pm" } }
+    ]
+  },
+  "presets": [{ "name": "Locations" }]
+}
+{% endschema %}

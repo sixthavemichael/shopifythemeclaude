@@ -1,0 +1,27 @@
+<div style="max-width:480px; margin:80px auto; padding:0 24px">
+  <h1 style="font-size:22px; font-weight:300; letter-spacing:.14em; text-transform:uppercase; margin-bottom:32px; text-align:center">Sign In</h1>
+
+  {%- form 'customer_login' -%}
+    {%- if form.errors -%}
+      <p style="color:#e24b4a; font-size:12px; margin-bottom:16px; text-align:center">{{ form.errors | default_errors }}</p>
+    {%- endif -%}
+    <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px">
+      <input class="sa-form-input" type="email" name="customer[email]" placeholder="Email address" autocomplete="email" required style="width:100%">
+      <input class="sa-form-input" type="password" name="customer[password]" placeholder="Password" autocomplete="current-password" required style="width:100%">
+    </div>
+    <button type="submit" class="sa-btn sa-btn--primary sa-btn--full" style="margin-bottom:12px">Sign In</button>
+    <div style="display:flex; justify-content:space-between; font-size:11px; color: var(--sa-muted)">
+      <a href="/account/recover" style="color: var(--sa-muted); text-decoration:underline; text-underline-offset:2px">Forgot password?</a>
+      <a href="/account/register" style="color: var(--sa-muted); text-decoration:underline; text-underline-offset:2px">Create account</a>
+    </div>
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "Login page",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Login page" }]
+}
+{% endschema %}

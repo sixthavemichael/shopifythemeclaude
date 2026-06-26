@@ -1,0 +1,70 @@
+<div class="sa-collection">
+
+  <div class="sa-collection__header">
+    <h1 class="sa-collection__title">{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <p style="font-size:13px; color: var(--sa-muted); margin-top: 8px; max-width: 600px;">{{ collection.description }}</p>
+    {%- endif -%}
+    <p class="sa-collection__count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+  </div>
+
+  <div class="sa-collection__filter-bar">
+    <div class="sa-collection__filters">
+      <a href="{{ collection.url }}" class="sa-filter-btn {% unless current_tags %}is-active{% endunless %}">All</a>
+      <a href="{{ collection.url }}/sneakers" class="sa-filter-btn {% if current_tags contains 'sneakers' %}is-active{% endif %}">Sneakers</a>
+      <a href="{{ collection.url }}/clothing" class="sa-filter-btn {% if current_tags contains 'clothing' %}is-active{% endif %}">Clothing</a>
+      <a href="{{ collection.url }}/vintage" class="sa-filter-btn {% if current_tags contains 'vintage' %}is-active{% endif %}">Vintage</a>
+      <a href="{{ collection.url }}/authenticated" class="sa-filter-btn {% if current_tags contains 'authenticated' %}is-active{% endif %}">Authenticated</a>
+    </div>
+    <div class="sa-collection__sort">
+      <span style="font-size:10px; letter-spacing:.1em; text-transform:uppercase; color: var(--sa-muted)">Sort</span>
+      <select onchange="window.location = this.value">
+        <option value="{{ collection.url }}?sort_by=manual" {% if collection.sort_by == 'manual' %}selected{% endif %}>Featured</option>
+        <option value="{{ collection.url }}?sort_by=created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+        <option value="{{ collection.url }}?sort_by=price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+        <option value="{{ collection.url }}?sort_by=price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  {%- if collection.products.size > 0 -%}
+    <div class="sa-grid">
+      {%- for product in collection.products -%}
+        {%- render 'product-card', product: product -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div style="display:flex; justify-content:center; gap:8px; margin-top: 48px">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="sa-btn sa-btn--ghost sa-btn--sm">← Previous</a>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}" class="sa-btn sa-btn--ghost sa-btn--sm">{{ part.title }}</a>
+          {%- else -%}
+            <span class="sa-btn sa-btn--primary sa-btn--sm">{{ part.title }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="sa-btn sa-btn--ghost sa-btn--sm">Next →</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  {%- else -%}
+    <p style="color: var(--sa-muted); font-size: 13px; padding: 40px 0;">No products found in this collection.</p>
+  {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "Collection page",
+  "tag": "div",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "min": 12, "max": 48, "step": 12, "label": "Products per page", "default": 24 }
+  ],
+  "presets": [{ "name": "Collection page" }]
+}
+{% endschema %}

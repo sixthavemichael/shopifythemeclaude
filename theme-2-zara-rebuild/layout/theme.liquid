@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+
+  <title>
+    {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {{ content_for_header }}
+
+  {{ 'sixth-ave.css' | asset_url | stylesheet_tag }}
+</head>
+
+<body class="sa-body">
+
+  {%- sections 'header-group' -%}
+
+  <main id="MainContent" class="sa-main" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- sections 'footer-group' -%}
+
+  <!-- Cart Drawer -->
+  <div id="CartDrawer" class="sa-cart-drawer" aria-hidden="true" role="dialog" aria-label="Cart">
+    <div class="sa-cart-drawer__overlay" onclick="SixthAve.closeCart()"></div>
+    <div class="sa-cart-drawer__panel">
+      <div class="sa-cart-drawer__header">
+        <span class="sa-cart-drawer__title">Your Cart</span>
+        <button class="sa-cart-drawer__close" onclick="SixthAve.closeCart()" aria-label="Close cart">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </div>
+      <div class="sa-cart-drawer__body" id="CartDrawerBody">
+        {%- if cart.item_count == 0 -%}
+          <div class="sa-cart-drawer__empty">
+            <p>Your cart is empty.</p>
+            <a href="/collections/all" class="sa-btn sa-btn--primary" onclick="SixthAve.closeCart()">Shop All</a>
+          </div>
+        {%- else -%}
+          {%- for item in cart.items -%}
+            <div class="sa-cart-item" data-key="{{ item.key }}">
+              <a href="{{ item.url }}" class="sa-cart-item__image">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 100 }}" alt="{{ item.title | escape }}" width="80" height="80" loading="lazy">
+                {%- endif -%}
+              </a>
+              <div class="sa-cart-item__details">
+                <a href="{{ item.url }}" class="sa-cart-item__name">{{ item.product.title }}</a>
+                {%- if item.variant.title != 'Default Title' -%}
+                  <span class="sa-cart-item__variant">{{ item.variant.title }}</span>
+                {%- endif -%}
+                <div class="sa-cart-item__row">
+                  <div class="sa-qty">
+                    <button class="sa-qty__btn" onclick="SixthAve.updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})">−</button>
+                    <span class="sa-qty__val">{{ item.quantity }}</span>
+                    <button class="sa-qty__btn" onclick="SixthAve.updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+                  </div>
+                  <span class="sa-cart-item__price">{{ item.final_line_price | money }}</span>
+                </div>
+              </div>
+              <button class="sa-cart-item__remove" onclick="SixthAve.updateQty('{{ item.key }}', 0)" aria-label="Remove item">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5"/></svg>
+              </button>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      {%- if cart.item_count > 0 -%}
+        <div class="sa-cart-drawer__footer">
+          <div class="sa-cart-drawer__subtotal">
+            <span>Subtotal</span>
+            <span id="CartSubtotal">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="sa-cart-drawer__note">Shipping & taxes calculated at checkout</p>
+          <a href="/checkout" class="sa-btn sa-btn--primary sa-btn--full">Checkout</a>
+          <a href="/cart" class="sa-btn sa-btn--ghost sa-btn--full">View Cart</a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Search Overlay -->
+  <div id="SearchOverlay" class="sa-search-overlay" aria-hidden="true">
+    <div class="sa-search-overlay__inner">
+      <form action="/search" method="get" class="sa-search-overlay__form">
+        <input type="hidden" name="type" value="product">
+        <input class="sa-search-overlay__input" type="search" name="q" placeholder="Search for sneakers, brands, tees..." autocomplete="off" autofocus>
+        <button type="submit" class="sa-search-overlay__submit" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+      <button class="sa-search-overlay__close" onclick="SixthAve.closeSearch()" aria-label="Close search">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1 1l18 18M19 1L1 19" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="{{ 'sixth-ave.js' | asset_url }}" defer></script>
+</body>
+</html>

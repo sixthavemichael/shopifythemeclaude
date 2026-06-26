@@ -1,0 +1,70 @@
+<header class="sa-header" role="banner">
+  <div class="sa-header__inner">
+
+    <!-- Mobile menu button -->
+    <button class="sa-header__mobile-btn sa-header__icon-btn" aria-label="Open menu" onclick="document.querySelector('.sa-nav-drawer').classList.add('is-open'); document.body.style.overflow='hidden'">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+
+    <!-- Logo -->
+    <a href="/" class="sa-header__logo" aria-label="{{ shop.name }}">
+      {%- if settings.logo != blank -%}
+        <img src="{{ settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" width="{{ settings.logo_width }}" loading="eager">
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="sa-header__nav" aria-label="Main navigation">
+      {%- for link in linklists[settings.main_menu].links -%}
+        <a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <!-- Icons -->
+    <div class="sa-header__icons">
+      <button class="sa-header__icon-btn" onclick="SixthAve.openSearch()" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <a href="/account" class="sa-header__icon-btn" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 17C1.5 13.5 5 11 9 11s7.5 2.5 7.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+      <a href="/cart" class="sa-header__icon-btn" onclick="event.preventDefault(); SixthAve.openCart()" aria-label="Cart ({{ cart.item_count }} items)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 1h2.5l2 9h9l2-7H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="14" cy="16" r="1" fill="currentColor"/></svg>
+        <span class="sa-header__cart-count" data-count="{{ cart.item_count }}">{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- Mobile Nav Drawer -->
+<div class="sa-nav-drawer" aria-hidden="true">
+  <div class="sa-nav-drawer__overlay" onclick="this.closest('.sa-nav-drawer').classList.remove('is-open'); document.body.style.overflow=''"></div>
+  <div class="sa-nav-drawer__panel">
+    <div class="sa-nav-drawer__header">
+      <span class="sa-nav-drawer__logo">{{ shop.name }}</span>
+      <button class="sa-nav-drawer__close" onclick="this.closest('.sa-nav-drawer').classList.remove('is-open'); document.body.style.overflow=''" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+    <nav class="sa-nav-drawer__links">
+      {%- for link in linklists[settings.main_menu].links -%}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {%- endfor -%}
+      <a href="/account">Account</a>
+      <a href="/search">Search</a>
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "sa-section-header",
+  "limit": 1,
+  "settings": [],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

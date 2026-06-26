@@ -1,0 +1,13 @@
+<div style="max-width: 800px; margin: 0 auto; padding: 60px 24px">
+  <h1 style="font-size: clamp(20px,3vw,30px); font-weight:300; letter-spacing:.12em; text-transform:uppercase; margin-bottom: 32px">{{ page.title }}</h1>
+  <div style="font-size:14px; color: var(--sa-muted); line-height:1.8; letter-spacing:.02em">{{ page.content }}</div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Page" }]
+}
+{% endschema %}

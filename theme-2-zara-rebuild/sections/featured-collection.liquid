@@ -1,0 +1,43 @@
+{%- assign col = collections[section.settings.collection] -%}
+
+<section class="sa-section">
+  <div class="sa-section__inner">
+    <div class="sa-section__header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="sa-section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="sa-section__title">{{ section.settings.title | default: col.title }}</h2>
+      </div>
+      {%- if section.settings.show_view_all and col != blank -%}
+        <a href="{{ col.url }}" class="sa-btn sa-btn--ghost sa-btn--sm">View All</a>
+      {%- endif -%}
+    </div>
+
+    {%- if col != blank -%}
+      <div class="sa-grid sa-grid--{{ section.settings.columns }}">
+        {%- for product in col.products limit: section.settings.products_to_show -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p style="color: var(--sa-muted); font-size: 13px;">Select a collection in the theme editor.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "tag": "section",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label" },
+    { "type": "text", "id": "title", "label": "Section title" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 12, "step": 2, "label": "Products to show", "default": 8 },
+    { "type": "select", "id": "columns", "label": "Columns (desktop)", "options": [{ "value": "3", "label": "3" }, { "value": "4", "label": "4" }, { "value": "5", "label": "5" }], "default": "4" },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show View All button", "default": true }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+<section class="sa-editorial {% if section.settings.image_position == 'right' %}sa-editorial--reverse{% endif %}">
+
+  <div class="sa-editorial__image">
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 900 }}"
+        srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1200 }} 1200w"
+        sizes="50vw"
+        alt="{{ section.settings.image.alt | default: section.settings.heading }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      <div style="background: #1a1a1a; width: 100%; height: 100%; min-height: 480px;"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="sa-editorial__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="sa-editorial__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="sa-editorial__heading">{{ section.settings.heading | newline_to_br }}</h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <div class="sa-editorial__body">{{ section.settings.body }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link | default: '#' }}" class="sa-btn sa-btn--primary">{{ section.settings.button_label }}</a>
+    {%- endif -%}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Editorial feature",
+  "tag": "section",
+  "settings": [
+    { "type": "select", "id": "image_position", "label": "Image position", "options": [{ "value": "left", "label": "Left" }, { "value": "right", "label": "Right" }], "default": "left" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "Authentication" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Every piece.\nVerified." },
+    { "type": "richtext", "id": "body", "label": "Body text", "default": "<p>Our experts authenticate every item — 10+ years of experience, over 10,000 products verified. Shop confidently knowing your purchase is 100% the real thing.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Our Process" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Editorial feature" }]
+}
+{% endschema %}
